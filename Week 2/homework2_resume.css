@@ -1,0 +1,79 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #D7C59C; /* Cream background */
+    color: #5D6C2B; /* Dark brown text color */
+}
+
+/* Header Styles */
+
+.header {
+    background-color: #A99E82; /* Green header background */
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+.header img {
+    max-width: 150px;
+    border-radius: 50%;
+} 
+
+.name {
+    font-size: 24px;
+    margin-top: 10px;
+}
+
+/* Section Styles */
+.section {
+    background-color: #fff; /* White section background */
+    margin: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Drop shadow */
+}
+
+.section h2 {
+    color: #A99E82; /* Green section headings */
+}
+
+/* List Styles */
+ul {
+    list-style-type: disc; /* Bulleted list */
+    margin-left: 20px;
+}
+
+/* Icon Styles */
+.icon {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+/* Contact Styles */
+.contact p {
+    margin: 5px 0;
+}
+
+/* Education and Experience Styles */
+.education h3, .experience h3 {
+    color: #A99E82; /* Green section headings */
+}
+
+/* Interests Styles */
+.interests p {
+    margin: 5px 0;
+    font-size: 18px;
+}
+
+/* Link Styles */
+a {
+    color: #A99E82; /* Green links */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #5D6C2B; /* Dark brown on hover */
+}
