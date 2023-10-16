@@ -1,68 +1,107 @@
 * {
-    padding: 0px;
-    margin: 0px;
-  }
-  
-  body {
-    height: 100vh;
-    width: 100%;
-    margin: 0;
-    display: flex;
-    font-family: sans-serif;
-    box-sizing: border-box;
-  }
-  
-  img,
-  .hidden {
-    display: none;
-  }
-  
-  img[src] {
-    display: block;
-  }
-  
-  #main-container {
-    height: 100%;
-    width: 66%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #87b7ff;
-  }
-  
-  #weather-container {
-    height: 60%;
-    width: 90%;
-  }
-  
-  #side-container {
-    height: 100%;
-    width: 34%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  #search-input {
-    padding: 10px;
-    border-radius: 5px;
-    border-width: 1px;
-    margin-right: 16px;
-    margin-bottom: 16px;
-  }
-  
-  #search-button {
-    padding: 10px;
-    background-color: #0075ff;
-    color: #ffffff;
-    border-radius: 5px;
-    border-width: 1px;
-  }
-  
-  .search-result:hover {
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  font-family: sans-serif;
+  box-sizing: border-box;
+}
+
+img,
+.hidden {
+  display: none;
+}
+
+img[src] {
+  display: block;
+}
+
+#main-container {
+  height: 100%;
+  width: 66%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #87b7ff;
+}
+
+#weather-container {
+  height: 60%;
+  width: 90%;
+}
+
+#conditions-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#details-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#temp {
+  font-size: 72px;
+}
+
+#current-icon {
+  height: 220px;
+  width: 220px;
+}
+
+#five-day-cards-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.day-card {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-right: 12px;
+  border-radius: 5px;
+  padding: 25px;
+  border: 1px solid #0075ff;
+  background-color: white;
+}
+
+#side-container {
+  height: 100%;
+  width: 34%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#search-input {
+  padding: 10px;
+  border-radius: 5px;
+  border-width: 1px;
+  margin-right: 16px;
+  margin-bottom: 16px;
+}
+
+#search-button {
+  padding: 10px;
+  background-color: #0075ff;
+  color: #ffffff;
+  border-radius: 5px;
+  border-width: 1px;
+}
+
+.search-result:hover {
+  font-weight: bold;
+  cursor: pointer;
+}

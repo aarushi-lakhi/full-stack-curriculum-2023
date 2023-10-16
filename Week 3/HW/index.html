@@ -10,6 +10,19 @@
 <body>
 	<div id='main-container'>
 		<div id='weather-container'>
+			<div id='current-container'>
+					<h3 id='current-date' class='date'></h3>
+					<h1 id='city'></h1>
+					<div id='conditions-container'>
+						<div id='details-container'>
+								<h2 id='weather'></h2>
+								<h2 id='temp'></h2>
+								<h4 id='aqi'></h4>
+						</div>
+						<img id="current-icon"></img>
+					</div>
+			</div>
+			<div id='five-day-cards-container'></div>
 		</div> 
 	</div>
 	<div id='side-container'>
@@ -23,13 +36,10 @@
 
 <script>
 		// USE YOUR OWN API KEY
-		const apiKey = "";
+		const apiKey = "4fa89980077ea95558bed505ab7f94e3";
 
-        // variable that stores the city that is chosen
 		let city;
-        // variable that stores the weather and forecast for the city
 		let weather;
-        // the variable that stores the air quality index for the city
 		let aqi;
 
 		// function that accepts that a number N and returns the name of the day and the date N days from now as a string
@@ -99,9 +109,81 @@
 				lat: lat,
 				lon: lon
 			}
-			//printing the city object to the console
-			console.log(city);
-            // BEGIN CODING HERE
+			document.querySelector('#city').innerText = 'Weather for ' + city.fullName; 
+			getWeather()
+			getAQI()
+		}
+
+		// function that uses OpenWeatherMap's one call API to find the current weather and daily forecast of a location
+		function getWeather() {
+			// creates the API call with the city's lattitude and longitude and imperial units as filters 
+			let apiCall = `https://api.openweathermap.org/data/2.5/onecall?lat=${city.lat}&lon=${city.lon}&units=imperial&appid=${apiKey}`;
+			fetch(apiCall)
+				.then((response) => 
+					response.json()
+				)
+				.then((data) => {
+					// sets the global weather variable
+					weather = data
+					renderWeather()
+				});
+		}
+
+		// function that uses OpenWeatherMap's air pollution API to find the AQI of a location
+		function getAQI() {
+			let apiCall = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}`;
+			fetch(apiCall)
+				.then((response) => 
+					response.json()
+				)
+				.then((data) => {
+					// sets the global AQI variable
+					aqi = data.list[0]
+					renderAQI()
+				});
+		}
+
+		// function that renders out the weather, mainly focusing on current weather
+		function renderWeather() {
+			document.querySelector('#temp').innerText = Math.round(weather.current.temp) + "°"
+			document.querySelector('#weather').innerText = weather.current.weather[0].description
+			document.querySelector('#current-date').innerText = formatDate()
+			// sets the image source of current-icon to a matching image in the icons folder
+			document.querySelector('#current-icon').src = `/icons/${weather.current.weather[0].icon}.svg`
+			// sets the alt property for accessiblity
+			document.querySelector('#current-icon').alt = "weather-icon"
+			renderFiveDay()
+		}
+
+		// function that renders out the 5-day forecast cards
+		function renderFiveDay() {
+			const fiveDayCardsContainer = document.querySelector('#five-day-cards-container')
+			fiveDayCardsContainer.innerHTML = ""
+				// uses a for loop that starts 1 (tomorrow) and ends at 5 (end of five-day forecast)
+				for (let i = 1; i < 6; i++) {
+					// generates a card for every day in the five day forecast
+					const dayCard = document.createElement('div')
+						dayCard.className = 'day-card'
+						const futureDate = document.createElement('h3')
+						futureDate.className = 'date'
+						futureDate.innerHTML = formatDate(i)
+						dayCard.appendChild(futureDate)
+						const futureIcon = document.createElement('img')
+						futureIcon.className = 'card-icon'
+						futureIcon.src = `/icons/${weather.daily[i].weather[0].icon}.svg`
+						futureIcon.alt = 'weather-icon'
+						dayCard.appendChild(futureIcon)
+						const futureTemp = document.createElement('h2')
+						futureTemp.className = 'future-temp'
+						futureTemp.innerHTML = Math.round(weather.daily[i].temp.max) + ' to ' + Math.round(weather.daily[i].temp.min)
+					dayCard.appendChild(futureTemp)
+					fiveDayCardsContainer.appendChild(dayCard)
+				}
+		}
+
+		// function that renders out the AQI section 
+		function renderAQI() {
+			document.querySelector('#aqi').innerText = 'AQI: ' + aqi.main.aqi;
 		}
 	</script>
 </html>
