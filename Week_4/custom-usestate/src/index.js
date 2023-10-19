@@ -2,10 +2,10 @@ import React from "react"
 import ReactDOM from "react-dom"
 import "./index.css"
 
-int stateValues = []
+let stateValues = []
 let index = -1
 
-const useState = (initialValue) = {
+const useState = (initialValue) => {
   index++
   const newIndex = Number(index)
 
@@ -18,25 +18,25 @@ const useState = (initialValue) = {
     console.log(newValue)
     render()
   }
-  return (stateValues[newIndex], setValue)
+  return [stateValues[newIndex], setValue]
 }
 
 const App = () => {
 
-  const (countA, setCount[A] = useState[0])
-  const (countB, setCount[B] = useState[-1])
+  const [countA, setCountA] = useState(0)
+  const [countB, setCountB] = useState(0)
 
   return (
     <div>
         <div>
-            <h1>Count A: 1 </h1>
+            <h1>Count A: {countA} </h1>
             <button  onClick = {() => setCountA(countA-1)} >Subtract</button>
             <button  onClick = {() => setCountA(countA+1)} >Add</button>
         </div>
         <div>
-            <h1>Count B: (CountB) </h1>
-            <button onClick = {() => setCountA(countB-1)} >Subtract</button>
-            <button onClick = {() => setCountA(countB-1)} >Add</button>
+            <h1>Count B: {countB} </h1>
+            <button onClick = {() => setCountB(countB-1)} >Subtract</button>
+            <button onClick = {() => setCountB(countB+1)} >Add</button>
         </div>
     </div>
   )
@@ -44,8 +44,7 @@ const App = () => {
 
 const render = () => {
   index = 1
-  ReactDOM.render
+  ReactDOM.render(<App />, document.getElementById("root"))
 }
-ReactDOM.render(<App />, document.getElementById("root"))
-
+render()
 

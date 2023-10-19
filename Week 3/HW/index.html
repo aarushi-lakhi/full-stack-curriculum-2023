@@ -149,7 +149,7 @@
 			document.querySelector('#weather').innerText = weather.current.weather[0].description
 			document.querySelector('#current-date').innerText = formatDate()
 			// sets the image source of current-icon to a matching image in the icons folder
-			document.querySelector('#current-icon').src = `/icons/${weather.current.weather[0].icon}.svg`
+			document.querySelector('#current-icon').src = `icons/${weather.current.weather[0].icon}.svg`
 			// sets the alt property for accessiblity
 			document.querySelector('#current-icon').alt = "weather-icon"
 			renderFiveDay()
@@ -170,7 +170,8 @@
 						dayCard.appendChild(futureDate)
 						const futureIcon = document.createElement('img')
 						futureIcon.className = 'card-icon'
-						futureIcon.src = `/icons/${weather.daily[i].weather[0].icon}.svg`
+						futureIcon.src = `icons/${weather.daily[i].weather[0].icon}.svg`
+						console.log(futureIcon.src)
 						futureIcon.alt = 'weather-icon'
 						dayCard.appendChild(futureIcon)
 						const futureTemp = document.createElement('h2')
