@@ -26,6 +26,11 @@ function App() {
   state of the selected city. This function will be passed to SideContainer as a prop.
   */
   
+  const [selectedCity, setSelectedCity] = useState(null);
+
+  const updateSelectedCity = (newCityData) => {
+    setSelectedCity(newCityData)
+  };
   
   return (
     <div className="app-container">
