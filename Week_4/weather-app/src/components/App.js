@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import '../styles/App.css'; // Import the CSS file for App
+//import dotenv from 'dotenv';
 
 import MainContainer from './MainContainer';
 import SideContainer from './SideContainer';
 
-const apiKey = '6dc87f0d902ad7e89bffc74e3ba537ef'; // Your OpenWeatherMap API key here
+//dotenv.config(); 
+const apiKey = process.env.REACT_APP_APIKey; // Your OpenWeatherMap API key here
+console.log(apiKey);
 
 function App() {
   /*
