@@ -25,16 +25,17 @@ export default function HomePage() {
       //kick them out
       navigate("/login")
     }
+    getTasks(currentUser);
   }, [currentUser])
 
   // State to hold the list of tasks.
   const [tasks, setTasks] = useState([
     // Sample tasks to start with.
-    { name: "create a todo app", finished: false },
+    /*{ name: "create a todo app", finished: false },
     { name: "wear a mask", finished: false },
     { name: "play roblox", finished: false },
     { name: "be a winner", finished: true },
-    { name: "become a tech bro", finished: true },
+    { name: "become a tech bro", finished: true },*/
   ]);
 
   // State for the task name being entered by the user.
@@ -78,7 +79,7 @@ export default function HomePage() {
       })
         .then((response) => response.json())
         .then((data) => {
-          setTasks([...tasks, { name: taskName, finished: false, id: data.id }]);    
+          setTasks([...tasks, { name: taskName, finished: false, id: data.id }]); 
         });
       setTaskName("");
     } else if (tasks.some((task) => task.name === taskName)) {
