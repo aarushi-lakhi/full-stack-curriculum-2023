@@ -9,6 +9,8 @@ const express = require('express');
 // returns an object
 const app = express();
 
+const db = require('./firebase');
+
 // for env variables
 // run npm install dotenv for dependency
 require('dotenv').config()
@@ -17,10 +19,10 @@ require('dotenv').config()
 app.use(express.json())
 
 // fake database
-const tweets = [
+/*const tweets = [
     {id: 1, user:'Zara', tweet:"Hello"},
     {id: 2, user: 'Emerald', tweet:"World"}
-]
+]*/
 
 // Middleware to validate tweet length
 const validateTweetLength = (req, res, next) => {
@@ -49,12 +51,15 @@ app.get('/', (req, res) => {
 })
 
 // get all tweets
-app.get('/api/tweets', (req, res) => {
-    res.send(tweets)
+app.get('/api/tweets', async (req, res) => {
+    const doc = await db.collection("tweets").doc("tweets").get();
+    res.send(doc.data().tweets)
 })
 
 // get tweets by user (param in route)
-app.get('/api/tweets/:user', (req, res) => {
+app.get('/api/tweets/:user', async (req, res) => {
+    const doc = await db.collection("tweets").doc("tweets").get();
+    const tweets = doc.data().tweets;
     var target = tweets.find(t => t.user === req.params.user)
     if (!target) {
         res.status(404).send("Tweet not found")
@@ -81,26 +86,34 @@ app.get('/api/tweets/:user', (req, res) => {
 // })
 
 // post a tweet
-app.post('/api/tweets', validateInput, validateTweetLength, (req, res) => {
+app.post('/api/tweets', validateInput, validateTweetLength, async (req, res) => {
     var tweet = {
         id: tweets.length + 1,
         user: req.body.user,
         tweet: req.body.tweet
     }
-    tweets.push(tweet)
+    const tweetsRef = db.collection("tweets").doc("tweets");
+    const snapshot = await tweetsRef.get();
+    const currTweets = snapshot.data().tweets;
+    currTweets.push(tweet)
+    await tweetsRef.update({tweets: currTweets})
     res.send(tweet)
 })
 
 // delete a tweet
-app.delete('/api/tweets', (req, res) => {
-    const tweetIndex = tweets.findIndex(tweet => tweet.id === req.body.id);
+app.delete('/api/tweets', async (req, res) => {
+    const tweetsRef = db.collection("tweets").doc("tweets");
+    const snapshot = await tweetsRef.get();
+    const currTweets = snapshot.data().tweets;
+    const tweetIndex = currTweets.findIndex(tweet => tweet.id === req.body.id);
     if (tweetIndex === -1) {
         res.status(404).send("Tweet not found");
       } else {
         // Remove the tweet from the 'tweets' array
         var removed = tweets[tweetIndex]
         console.log(removed)
-        tweets.splice(tweetIndex, 1);
+        currTweets.splice(tweetIndex, 1);
+        await tweetsRef.update({tweets: currTweets})
         res.json(removed);
       }
 })

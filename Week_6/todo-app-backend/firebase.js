@@ -13,6 +13,7 @@ require("dotenv").config();
 // Your .env file should be added to your .gitignore to keep sensitive data secure.
 //  -> This is already done for you. But double check! You really don't want your credentials pushed to the web.
 
+console.log(process.env.FIREBASE_CREDENTIALS);
 const creds = JSON.parse(process.env.FIREBASE_CREDENTIALS);
 
 // Initializing Firebase Admin SDK with credentials and database URL
