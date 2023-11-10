@@ -12,7 +12,9 @@ var pbkdf2 = require('pbkdf2')
 const jwt = require('jsonwebtoken');
 // store in env, ok here for demo
 ACCESS_TOKEN_SECRET = "abc123"
+REFRESH_TOKEN_SECRET = "123abc"
 const SALT = ";asf;klsadfllsfjalskdfjl";
+let refreshTokens = []
 
 // for env variables
 // run npm install dotenv for dependency
@@ -155,7 +157,7 @@ console.log(user)
   const accessToken = jwt.sign(
     { "username": username },
     ACCESS_TOKEN_SECRET,
-    { expiresIn: '30s' }
+    { expiresIn: '15s' }
   );  
   // Send JWT Token back
   res.json({
@@ -183,17 +185,47 @@ app.post("/login", async (req, res) => {
     const accessToken = jwt.sign(
       { "username": username },
       ACCESS_TOKEN_SECRET,
-      { expiresIn: '30s' }
+      { expiresIn: '15s' }
     );
+    const refreshToken = jwt.sign(
+      { "username": username },
+      REFRESH_TOKEN_SECRET
+    );
+    refreshTokens.push(refreshToken)
     return res.json({
       msg: "successfully logged in",
       data: { username: username },
       token: accessToken,
+      refresh_token: refreshToken
     });
   } else {
     return res.status(401).json({ msg: "Username or password was incorrect" });
   }
 });
+
+app.post('/refreshToken', (req, res) => {
+  const refreshToken = req.body.token
+  if (refreshToken == null) return res.sendStatus(401)
+  // check if refresh token is valid
+  if (!refreshTokens.includes(refreshToken)) {
+    return res.sendStatus(401)
+  }
+  jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, user) => {
+    if (err) return res.send(401)
+    const accessToken = jwt.sign(
+      { "username": user.username },
+      ACCESS_TOKEN_SECRET,
+      { expiresIn: '15s' }
+    );
+    res.json({accessToken: accessToken})
+  })
+})
+
+app.delete('/logout', (req, res) => {
+  token = req.body.token
+  refreshTokens = refreshTokens.filter(tok => tok !== token)
+  res.sendStatus(204)
+})
 
 // Example of a protected route
 app.get("/protected", authMiddleware, (req, res) => {
