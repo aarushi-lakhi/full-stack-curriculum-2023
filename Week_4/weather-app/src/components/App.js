@@ -47,8 +47,8 @@ function App() {
       allows MainContainer to display the weather for the selected city.
       */}
       
-      <MainContainer apiKey={apiKey} /* Pass the selected city data as props to 'MainContainer' */ />
-      <SideContainer apiKey={apiKey} /* Pass the city data update function as a prop to 'SideContainer' */ />
+      <MainContainer selectedCity = {selectedCity} apiKey={apiKey} /* Pass the selected city data as props to 'MainContainer' */ />
+      <SideContainer updateSelectedCity = {updateSelectedCity} apiKey={apiKey} /* Pass the city data update function as a prop to 'SideContainer' */ />
     </div>
   );
 }

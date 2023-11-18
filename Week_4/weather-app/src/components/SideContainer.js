@@ -96,7 +96,11 @@ function SideContainer(props) {
       lon: lon,
     };
     console.log(city);
+
+    props.updateSelectedCity(city)
   }
+
+
 
   return (
     <div id="side-container">
