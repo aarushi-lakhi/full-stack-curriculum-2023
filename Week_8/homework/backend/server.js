@@ -2,19 +2,46 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-
-// Creating an instance of Express
-const app = express();
+const admin = require("firebase-admin");
 
 // Loading environment variables from a .env file into process.env
 require("dotenv").config();
 
+const creds = JSON.parse(process.env.FIREBASE_CREDENTIALS);
+
+// Creating an instance of Express
+const app = express();
+
 // Importing the Firestore database instance from firebase.js
-const db = require("./firebase");
+//const db = require("./firebase");
 
 // Middlewares to handle cross-origin requests and to parse the body of incoming requests to JSON
 app.use(cors());
 app.use(bodyParser.json());
+
+// Initialize Firebase Admin SDK
+admin.initializeApp({
+  credential: admin.credential.cert(creds),
+  databaseURL: "https://tpeo-to-do-list-project.firebaseio.com",
+}
+);
+
+const db = admin.firestore();
+// Firebase Admin Authentication Middleware
+const auth = (req, res, next) => {
+  try {
+    const tokenId = req.get("Authorization").split("Bearer ")[1];
+    admin.auth().verifyIdToken(tokenId)
+      .then((decoded) => {
+        req.token = decoded;
+        console.log("RAHHHHHHH " + decoded);
+        next();
+      })
+      .catch((error) => res.status(401).send(error));
+  } catch (error) {
+    res.status(400).send("Invalid token");
+  }
+};
 
 // Your API routes will go here...
 
@@ -42,7 +69,7 @@ app.get("/tasks", async (req, res) => {
 });
 
 // GET: Endpoint to retrieve all tasks for a user
-app.get("/tasks/:userID", async (req, res) => {
+app.get("/tasks/:userID", auth, async (req, res) => {
   try {
     const userID = req.params.userID;
 

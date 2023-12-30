@@ -34,9 +34,10 @@ export default function HomePage() {
     if (!currentUser) {
       //kick them out
       navigate("/login")
+    } else {
+      getTasks();
     }
-    getTasks(currentUser.username);
-  }, [currentUser])
+  }, [currentUser, navigate])
 
 
 
@@ -48,15 +49,18 @@ export default function HomePage() {
   // to fetch the list of tasks instead of using the hardcoded data.
 
   //Updates tasks accordingly
-  function getTasks(user) {
-    fetch(`http://localhost:3001/tasks/${user}`)
+  function getTasks() {
+    fetch(`http://localhost:3001/tasks/${currentUser.email}`,
+    {
+      "Authorization": `Bearer ${currentUser.accessToken}`
+    })
       .then((response) => response.json())
       .then((data) => {
         // data = data.filter((item) => item.finished);
         const mappedData = data.map((item) => {
           return {id: item.id, name : item.task, finished: item.finished};
         })
-        console.log(data);
+        //console.log(data);
         setTasks(mappedData);
       });
   }
@@ -72,10 +76,10 @@ export default function HomePage() {
         method: "POST",
         headers : {
           "Content-Type": "application/json",
-          //"Accept": "application/json",
+          "Accept": "application/json",
         },
         body: JSON.stringify({
-          "userID": currentUser.username,
+          "userID": currentUser.email,
           "task": taskName,
           "finished": false
         }),

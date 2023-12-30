@@ -15,13 +15,18 @@ function LoginPage() {
   const theme = useTheme();
 
   // TODO: Extract login function and error from our authentication context.
-  const { loginError, login} = useAuth()
+  const { loginError, login, register} = useAuth()
 
 
   // State to hold the username and password entered by the user.
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  // TODO: Handle register function.
+  const handleRegister = () => {
+    register(username, password)
+  };
+  
   // TODO: Handle login function.
   const handleLogin = () => {
     login(username, password)
@@ -78,6 +83,16 @@ function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={handleRegister}
+          >
+            Register
+          </Button>
           <Button
             type="submit"
             fullWidth
