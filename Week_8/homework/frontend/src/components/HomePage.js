@@ -24,6 +24,10 @@ export default function HomePage() {
   // State to hold the list of tasks.
   const [tasks, setTasks] = useState([]);
 
+  // State for the task name being entered by the user.
+  const [taskName, setTaskName] = useState("");
+
+  // Gets the token and the tasks for the current user whenever updated
   useEffect(() => {
     if (currentUser) {
       getTasks(currentUser);
@@ -32,32 +36,24 @@ export default function HomePage() {
     }
   }, [currentUser])
 
-
-
-  // State for the task name being entered by the user.
-  const [taskName, setTaskName] = useState("");
-
+  
   // TODO: Support retrieving your todo list from the API.
   // Currently, the tasks are hardcoded. You'll need to make an API call
   // to fetch the list of tasks instead of using the hardcoded data.
 
   //Updates tasks accordingly
   function getTasks(currentUser) {
-    fetch(`${backendURL}/${currentUser.email}`,
-    {
+    fetch(`${backendURL}/${currentUser.email}`, {
       headers: {
         "Authorization": `Bearer ${currentUser.accessToken}`
       }
     })
-      .then((response) => response.json())
-      .then((data) => {
-        // data = data.filter((item) => item.finished);
-        const mappedData = data.map((item) => {
-          return {id: item.id, name : item.task, finished: item.finished};
-        })
-        //console.log(data);
-        setTasks(mappedData);
-      });
+    .then(response => response.json())
+    .then(response => {
+      const allTasks = [];
+      response.forEach(task => allTasks.push({id: task.id, name: task.name, finished: task.finished}));
+      setTasks(allTasks);
+    })
   }
 
   function addTask() {
@@ -69,22 +65,22 @@ export default function HomePage() {
       // to the API to add a new task and then update the state based on the response.
       fetch(`${backendURL}`, {
         method: "POST",
-        headers : {
+        headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",
+          "accept": "application/json",
           "Authorization": `Bearer ${currentUser.accessToken}`
         },
         body: JSON.stringify({
-          "userID": currentUser.email,
-          "task": taskName,
+          "user": currentUser.email,
+          "name": taskName,
           "finished": false
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data)
-          setTasks([...tasks, { name: taskName, finished: false, id: data.id }]); 
+        })})
+        .then((response) => {
+          if (response.ok) {
+            setTasks([...tasks, {id: response.id, name: taskName, finished: false}]);
+          }
         });
+      
       setTaskName("");
     } else if (tasks.some((task) => task.name === taskName)) {
       alert("Task already exists!");
@@ -104,21 +100,18 @@ export default function HomePage() {
     // to the API to update the task's status and then update the state based on the response.
 
     //remove finished tasks
-    tasks.forEach((task) => {
+    tasks.forEach(async (task) => {
       if (task.finished) {
-        fetch(`${backendURL}/${task.id}`, {
-          method: "DELETE",
-          headers : {
-            "Content-Type": "application/json",
-            "accept": "application/json",
-            "Authorization": `Bearer ${currentUser.accessToken}`
-          },
-        })
-        .then((response) => response.json())
-        .then(() => {
-          const unfinishedTasks = tasks.filter((task) => !task.finished);
-          console.log(unfinishedTasks)
-          setTasks(unfinishedTasks);
+        await fetch(`${backendURL}/${task.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "accept": "application/json",
+          "Authorization": `Bearer ${currentUser.accessToken}`
+        }})
+        .then(response => {
+          const unfinished = tasks.filter(task => !task.finished);
+          setTasks(unfinished);
         })
       }
     })
