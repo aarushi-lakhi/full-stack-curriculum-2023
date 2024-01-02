@@ -25,13 +25,12 @@ export default function HomePage() {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    if (!currentUser) {
-      //kick them out
-      navigate("/login")
+    if (currentUser) {
+      getTasks(currentUser);
     } else {
-      getTasks();
+      navigate('/login');
     }
-  }, [currentUser, navigate])
+  }, [currentUser])
 
 
 
@@ -43,10 +42,12 @@ export default function HomePage() {
   // to fetch the list of tasks instead of using the hardcoded data.
 
   //Updates tasks accordingly
-  function getTasks() {
+  function getTasks(currentUser) {
     fetch(`${backendURL}/${currentUser.email}`,
     {
-      "Authorization": `Bearer ${currentUser.accessToken}`
+      headers: {
+        "Authorization": `Bearer ${currentUser.accessToken}`
+      }
     })
       .then((response) => response.json())
       .then((data) => {
@@ -71,6 +72,7 @@ export default function HomePage() {
         headers : {
           "Content-Type": "application/json",
           "Accept": "application/json",
+          "Authorization": `Bearer ${currentUser.accessToken}`
         },
         body: JSON.stringify({
           "userID": currentUser.email,
@@ -107,8 +109,9 @@ export default function HomePage() {
         fetch(`${backendURL}/${task.id}`, {
           method: "DELETE",
           headers : {
-            // "Content-Type": "application/json",
+            "Content-Type": "application/json",
             "accept": "application/json",
+            "Authorization": `Bearer ${currentUser.accessToken}`
           },
         })
         .then((response) => response.json())
