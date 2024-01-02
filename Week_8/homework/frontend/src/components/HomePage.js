@@ -16,19 +16,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext'
 
 export default function HomePage() {
+  const backendURL = process.env.REACT_APP_BACKEND;
+  
   const navigate = useNavigate();
-
   const {currentUser} = useAuth();
 
     // State to hold the list of tasks.
-    const [tasks, setTasks] = useState([
-      // Sample tasks to start with.
-      /*{ name: "create a todo app", finished: false },
-      { name: "wear a mask", finished: false },
-      { name: "play roblox", finished: false },
-      { name: "be a winner", finished: true },
-      { name: "become a tech bro", finished: true },*/
-    ]);
+    const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     if (!currentUser) {
@@ -50,7 +44,7 @@ export default function HomePage() {
 
   //Updates tasks accordingly
   function getTasks() {
-    fetch(`http://localhost:3001/tasks/${currentUser.email}`,
+    fetch(`${backendURL}/${currentUser.email}`,
     {
       "Authorization": `Bearer ${currentUser.accessToken}`
     })
@@ -72,7 +66,7 @@ export default function HomePage() {
       // TODO: Support adding todo items to your todo list through the API.
       // In addition to updating the state directly, you should send a request
       // to the API to add a new task and then update the state based on the response.
-      fetch("http://localhost:3001/tasks", {
+      fetch(`${backendURL}`, {
         method: "POST",
         headers : {
           "Content-Type": "application/json",
@@ -110,7 +104,7 @@ export default function HomePage() {
     //remove finished tasks
     tasks.forEach((task) => {
       if (task.finished) {
-        fetch(`http://localhost:3001/tasks/${task.id}`, {
+        fetch(`${backendURL}/${task.id}`, {
           method: "DELETE",
           headers : {
             // "Content-Type": "application/json",
