@@ -16,13 +16,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext'
 
 export default function HomePage() {
-  const backendURL = process.env.REACT_APP_BACKEND;
+  const backendURL = `${process.env.REACT_APP_BACKEND}/tasks`;
   
   const navigate = useNavigate();
   const {currentUser} = useAuth();
 
-    // State to hold the list of tasks.
-    const [tasks, setTasks] = useState([]);
+  // State to hold the list of tasks.
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     if (!currentUser) {
