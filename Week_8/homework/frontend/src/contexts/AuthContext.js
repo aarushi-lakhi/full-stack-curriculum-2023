@@ -8,6 +8,10 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
+// Creating a context for authentication. Contexts provide a way to pass data through 
+// the component tree without having to pass props down manually at every level.
+const AuthContext = createContext();
+
 const firebaseConfig = {
     apiKey: "AIzaSyC7HbTdxaynTwqZB0XtGdNIcGwHUcU-2JM",
     authDomain: "tpeo-to-do-list-project.firebaseapp.com",
@@ -21,10 +25,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Creating a context for authentication. Contexts provide a way to pass data through 
-// the component tree without having to pass props down manually at every level.
-const AuthContext = createContext();
-
 // This is a custom hook that we'll use to easily access our authentication context from other components.
 export const useAuth = () => {
     return useContext(AuthContext);
@@ -37,18 +37,15 @@ export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState(() => JSON.parse(localStorage.getItem('user')));
     const [loginError, setLoginError] = useState(null);
 
-    //const VALID_USERNAME = "admin"
-    //const VALID_PASSWORD = "foobar"
-
     // Sign up new users
     const register = (email, password) => {
         createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             setCurrentUser(userCredential.user);
             // correct and formal way of getting access token
-            userCredential.user.getIdToken().then((accessToken) => {
+            /* userCredential.user.getIdToken().then((accessToken) => {
                 console.log(accessToken)
-            })
+            })*/ 
             navigate("/");
         })
         .catch((error) => {
@@ -64,7 +61,7 @@ export function AuthProvider({ children }) {
             console.log(userCredential);
             setCurrentUser(userCredential.user);
             // this method of retrieving access token also works
-            console.log(userCredential.user.accessToken)
+            // console.log(userCredential.user.accessToken)
             navigate("/");
         })
         .catch((error) => {

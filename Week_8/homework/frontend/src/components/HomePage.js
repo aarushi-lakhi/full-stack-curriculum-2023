@@ -16,7 +16,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext'
 
 export default function HomePage() {
-  const backendURL = `${process.env.REACT_APP_BACKEND}/tasks`;
   
   const navigate = useNavigate();
   const {currentUser} = useAuth();
@@ -26,6 +25,9 @@ export default function HomePage() {
 
   // State for the task name being entered by the user.
   const [taskName, setTaskName] = useState("");
+  
+  // Hosted backend URL
+  const backendURL = `${process.env.REACT_APP_BACKEND}/tasks`;
 
   // Gets the token and the tasks for the current user whenever updated
   useEffect(() => {
