@@ -9,6 +9,7 @@ const app = express();
 
 // Loading environment variables from a .env file into process.env
 require("dotenv").config();
+//const creds = JSON.parse(process.env.FIREBASE_CREDENTIALS);
 
 // Importing the Firestore database instance from firebase.js
 const db = require("./firebase");
@@ -18,6 +19,15 @@ db.settings({ ignoreUndefinedProperties: true });
 app.use(cors());
 app.use(bodyParser.json());
 
+// Initialize Firebase Admin SDK
+/*admin.initializeApp({
+  credential: admin.credential.cert(creds),
+  databaseURL: "https://tpeo-to-do-list-project.firebaseio.com",
+}
+);*/
+
+//const db = admin.firestore();
+// Firebase Admin Authentication Middleware
 const auth = (req, res, next) => {
   try {
     const tokenId = req.get("Authorization").split("Bearer ")[1];
@@ -59,47 +69,60 @@ app.get("/tasks", auth, async (req, res) => {
 
 // GET: Endpoint to retrieve all tasks for a user
 // ... 
-app.get("/tasks/:user", auth, async (req, res) => {
+app.get("/tasks/:userID", auth, async (req, res) => {
   try {
-    const snapshot = await db.collection("tasks").where("user", "==", req.params.user).get();
+    const userID = req.params.userID;
+
+    // Fetch all documents from tasks collection for a specific user
+    const snapshot = await db.collection("tasks").where("userID", "==", userID).get();
     let tasks = [];
-    snapshot.forEach((doc) => { tasks.push({ id: doc.id, ...doc.data() }) });
+    snapshot.forEach((doc) => {
+      tasks.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
     res.status(200).send(tasks);
-  } catch (error) {
+  } catch (error) { 
     res.status(500).send(error.message);
   }
-})
+});
 
 // POST: Endpoint to add a new task
 // ...
 app.post("/tasks", auth, async (req, res) => {
   try {
+    // Fetching the request body
+    const userID = req.body.userID;
+    const userTask = req.body.task;
+    const finished = req.body.finished;
     const data = {
-      'user': req.body.user,
-      'name': req.body.name,
-      'finished': req.body.finished
-    }
-    const addedTask = await db.collection("tasks").add(data);
-    res.status(201).send({
-      id: addedTask.id,  // Automatically generated Document ID from Firestore
-      ...data,
-    });
+      'userID': userID,
+      'task': userTask,
+      'finished': finished
+    } 
+    // Adding a new document to the "tasks" collection
+    const task = await db.collection("tasks").add(data);
 
+    res.status(201).send({"id": task.id});
+    // Sending a successful response
   } catch (error) {
     res.status(500).send(error.message);
   }
-})
+});
 
 // DELETE: Endpoint to remove a task
 // ... 
-app.delete("/tasks/:id", auth, async (req, res) => {
+app.delete("/tasks/:id", auth, async (req, res) => { 
   try {
-    await db.collection("tasks").doc(req.params.id).delete();
+    const id = req.params.id;
+    // Deleting a document from the "tasks" collection
+    await db.collection("tasks").doc(id).delete();
     res.status(204).send();
   } catch (error) {
     res.status(500).send(error.message);
   }
-})
+});
 
 // Setting the port for the server to listen on
 const PORT = process.env.PORT || 3001;
