@@ -50,12 +50,13 @@ export default function HomePage() {
         "Authorization": `Bearer ${currentUser.accessToken}`
       }
     })
-    .then(response => response.json())
-    .then(response => {
-      const allTasks = [];
-      response.forEach(task => allTasks.push({id: task.id, name: task.name, finished: task.finished}));
-      setTasks(allTasks);
-    })
+    .then((response) => response.json())
+      .then((data) => {
+        const mappedData = data.map((item) => {
+          return {id: item.id, name : item.task, finished: item.finished};
+        })
+        setTasks(mappedData);
+      });
   }
 
   function addTask() {
@@ -69,20 +70,19 @@ export default function HomePage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "accept": "application/json",
-          "Authorization": `Bearer ${currentUser.accessToken}`
+          "Accept": "application/json",
         },
         body: JSON.stringify({
           "user": currentUser.email,
           "name": taskName,
           "finished": false
-        })})
-        .then((response) => {
-          if (response.ok) {
-            setTasks([...tasks, {id: response.id, name: taskName, finished: false}]);
-          }
-        });
-      
+        }),
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data)
+        setTasks([...tasks, { name: taskName, finished: false, id: data.id }]); 
+      });
       setTaskName("");
     } else if (tasks.some((task) => task.name === taskName)) {
       alert("Task already exists!");
@@ -111,9 +111,11 @@ export default function HomePage() {
           "accept": "application/json",
           "Authorization": `Bearer ${currentUser.accessToken}`
         }})
-        .then(response => {
-          const unfinished = tasks.filter(task => !task.finished);
-          setTasks(unfinished);
+        .then((response) => response.json())
+        .then(() => {
+          const unfinishedTasks = tasks.filter((task) => !task.finished);
+          console.log(unfinishedTasks)
+          setTasks(unfinishedTasks);
         })
       }
     })
