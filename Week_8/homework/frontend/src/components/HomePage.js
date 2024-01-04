@@ -33,6 +33,8 @@ export default function HomePage() {
   useEffect(() => {
     if (currentUser) {
       getTasks(currentUser);
+      console.log("backURL" + backendURL);
+      console.log("env" + process.env.REACT_APP_BACKEND);
     } else {
       navigate('/login');
     }
@@ -45,6 +47,7 @@ export default function HomePage() {
 
   //Updates tasks accordingly
   function getTasks(currentUser) {
+    console.log(`${backendURL}/${currentUser.email}`)
     fetch(`${backendURL}/${currentUser.email}`, {
       headers: {
         "Authorization": `Bearer ${currentUser.accessToken}`
@@ -52,6 +55,7 @@ export default function HomePage() {
     })
     .then((response) => response.json())
       .then((data) => {
+        console.log("data" + data);
         const mappedData = data.map((item) => {
           return {id: item.id, name : item.task, finished: item.finished};
         })
@@ -66,14 +70,16 @@ export default function HomePage() {
       // TODO: Support adding todo items to your todo list through the API.
       // In addition to updating the state directly, you should send a request
       // to the API to add a new task and then update the state based on the response.
+      console.log(`Bearer ${currentUser.accessToken}`);
       fetch(`${backendURL}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
+          "Authorization": `Bearer ${currentUser.accessToken}`
         },
         body: JSON.stringify({
-          "user": currentUser.email,
+          "userID": currentUser.email,
           "name": taskName,
           "finished": false
         }),

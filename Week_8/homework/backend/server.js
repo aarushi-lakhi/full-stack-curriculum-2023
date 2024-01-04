@@ -16,6 +16,9 @@ const db = require("./firebase");
 db.settings({ ignoreUndefinedProperties: true });
 
 // Middlewares to handle cross-origin requests and to parse the body of incoming requests to JSON
+/*app.use((req,res,next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+})*/
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -29,6 +32,7 @@ app.use(bodyParser.json());
 //const db = admin.firestore();
 // Firebase Admin Authentication Middleware
 const auth = (req, res, next) => {
+  console.log("backendtoken" + req.get("Authorization").split("Bearer ")[1]);
   try {
     const tokenId = req.get("Authorization").split("Bearer ")[1];
     admin.auth().verifyIdToken(tokenId)
@@ -45,7 +49,7 @@ const auth = (req, res, next) => {
 // Your API routes will go here...
 
 // GET: Endpoint to retrieve all tasks
-app.get("/tasks", auth, async (req, res) => {
+app.get("/tasks", async (req, res) => {
   try {
     // Fetching all documents from the "tasks" collection in Firestore
     const snapshot = await db.collection("tasks").get();
@@ -69,7 +73,7 @@ app.get("/tasks", auth, async (req, res) => {
 
 // GET: Endpoint to retrieve all tasks for a user
 // ... 
-app.get("/tasks/:userID", auth, async (req, res) => {
+app.get("/tasks/:userID", async (req, res) => {
   try {
     const userID = req.params.userID;
 
@@ -94,7 +98,7 @@ app.post("/tasks", auth, async (req, res) => {
   try {
     // Fetching the request body
     const userID = req.body.userID;
-    const userTask = req.body.task;
+    const userTask = req.body.name;
     const finished = req.body.finished;
     const data = {
       'userID': userID,
