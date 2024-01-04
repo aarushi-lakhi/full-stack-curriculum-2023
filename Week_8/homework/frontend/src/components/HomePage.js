@@ -47,7 +47,7 @@ export default function HomePage() {
 
   //Updates tasks accordingly
   function getTasks(currentUser) {
-    //console.log(`${backendURL}/${currentUser.email}`)
+    console.log(`${backendURL}/${currentUser.email}`)
     fetch(`${backendURL}/${currentUser.email}`, {
       headers: {
         "Authorization": `Bearer ${currentUser.accessToken}`

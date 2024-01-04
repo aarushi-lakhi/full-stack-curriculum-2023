@@ -108,7 +108,11 @@ app.post("/tasks", async (req, res) => {
     // Adding a new document to the "tasks" collection
     const task = await db.collection("tasks").add(data);
 
-    res.status(201).send({"id": task.id});
+    res.status(201).send({
+      id: addedTask.id,  // Automatically generated Document ID from Firestore
+      ...data,
+    });
+    
     // Sending a successful response
   } catch (error) {
     res.status(500).send(error.message);
