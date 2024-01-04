@@ -32,7 +32,7 @@ app.use(bodyParser.json());
 //const db = admin.firestore();
 // Firebase Admin Authentication Middleware
 const auth = (req, res, next) => {
-  console.log("backendtoken" + req.get("Authorization").split("Bearer ")[1]);
+  //console.log("backendtoken" + req.get("Authorization").split("Bearer ")[1]);
   try {
     const tokenId = req.get("Authorization").split("Bearer ")[1];
     admin.auth().verifyIdToken(tokenId)
@@ -94,7 +94,7 @@ app.get("/tasks/:userID", async (req, res) => {
 
 // POST: Endpoint to add a new task
 // ...
-app.post("/tasks", auth, async (req, res) => {
+app.post("/tasks", async (req, res) => {
   try {
     // Fetching the request body
     const userID = req.body.userID;
