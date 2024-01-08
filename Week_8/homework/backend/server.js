@@ -19,11 +19,12 @@ const db = require("./firebase");
   res.header('Access-Control-Allow-Origin', '*');
 })*/
 app.use(cors());
+app.use(express.json());
 //app.use(bodyParser.json());
 
 
 // Firebase Admin Authentication Middleware
-const auth = (req, res, next) => {
+function auth (req, res, next) {
   //console.log("backendtoken" + req.get("Authorization").split("Bearer ")[1]);
   try {
     const tokenId = req.get("Authorization").split("Bearer ")[1];
