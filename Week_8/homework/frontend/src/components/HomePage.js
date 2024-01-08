@@ -27,7 +27,7 @@ export default function HomePage() {
   const [taskName, setTaskName] = useState("");
   
   // Hosted backend URL
-  const backendURL = `${process.env.REACT_APP_BACKEND}/tasks`;
+  const backendURL = `${process.env.REACT_APP_BACKEND_LOCAL}/tasks`;
 
   // Gets the token and the tasks for the current user whenever updated
   useEffect(() => {
