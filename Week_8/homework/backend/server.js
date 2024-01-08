@@ -1,6 +1,6 @@
 // Importing required modules
 const express = require("express");
-const bodyParser = require("body-parser");
+//const bodyParser = require("body-parser");
 const cors = require("cors");
 const admin = require("firebase-admin");
 
@@ -19,7 +19,7 @@ const db = require("./firebase");
   res.header('Access-Control-Allow-Origin', '*');
 })*/
 app.use(cors());
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 
 
 // Firebase Admin Authentication Middleware
