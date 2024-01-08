@@ -24,7 +24,7 @@ app.use(express.json());
 
 
 // Firebase Admin Authentication Middleware
-function auth (req, res, next) {
+const auth = (req, res, next) => {
   //console.log("backendtoken" + req.get("Authorization").split("Bearer ")[1]);
   try {
     const tokenId = req.get("Authorization").split("Bearer ")[1];
@@ -126,7 +126,7 @@ app.delete("/tasks/:id", auth, async (req, res) => {
 });
 
 // Setting the port for the server to listen on
-const PORT = process.env.PORT || 3001;
+const PORT = 3001;
 // Starting the server
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
