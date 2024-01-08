@@ -21,7 +21,7 @@ const db = require("./firebase");
 app.use(cors());
 app.use(bodyParser.json());
 
-/*
+
 // Firebase Admin Authentication Middleware
 const auth = (req, res, next) => {
   //console.log("backendtoken" + req.get("Authorization").split("Bearer ")[1]);
@@ -122,13 +122,6 @@ app.delete("/tasks/:id", auth, async (req, res) => {
   } catch (error) {
     res.status(500).send(error.message);
   }
-});
-*/
-
-// Sample endpoint
-app.get('/message', (req, res) => {
-  console.log("GET endpoint contacted")
-  res.json({ message: 'Hello from the server!' });
 });
 
 // Setting the port for the server to listen on
