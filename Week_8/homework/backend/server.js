@@ -13,7 +13,6 @@ require("dotenv").config();
 
 // Importing the Firestore database instance from firebase.js
 const db = require("./firebase");
-db.settings({ ignoreUndefinedProperties: true });
 
 // Middlewares to handle cross-origin requests and to parse the body of incoming requests to JSON
 /*app.use((req,res,next) => {
@@ -22,14 +21,7 @@ db.settings({ ignoreUndefinedProperties: true });
 app.use(cors());
 app.use(bodyParser.json());
 
-// Initialize Firebase Admin SDK
-/*admin.initializeApp({
-  credential: admin.credential.cert(creds),
-  databaseURL: "https://tpeo-to-do-list-project.firebaseio.com",
-}
-);*/
-
-//const db = admin.firestore();
+/*
 // Firebase Admin Authentication Middleware
 const auth = (req, res, next) => {
   //console.log("backendtoken" + req.get("Authorization").split("Bearer ")[1]);
@@ -130,6 +122,13 @@ app.delete("/tasks/:id", auth, async (req, res) => {
   } catch (error) {
     res.status(500).send(error.message);
   }
+});
+*/
+
+// Sample endpoint
+app.get('/message', (req, res) => {
+  console.log("GET endpoint contacted")
+  res.json({ message: 'Hello from the server!' });
 });
 
 // Setting the port for the server to listen on
