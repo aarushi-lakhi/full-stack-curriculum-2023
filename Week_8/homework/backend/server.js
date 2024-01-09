@@ -9,15 +9,11 @@ const app = express();
 
 // Loading environment variables from a .env file into process.env
 require("dotenv").config();
-//const creds = JSON.parse(process.env.FIREBASE_CREDENTIALS);
 
 // Importing the Firestore database instance from firebase.js
 const db = require("./firebase");
 
 // Middlewares to handle cross-origin requests and to parse the body of incoming requests to JSON
-/*app.use((req,res,next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-})*/
 app.use(cors());
 app.use(express.json());
 //app.use(bodyParser.json());
