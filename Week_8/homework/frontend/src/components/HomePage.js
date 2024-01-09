@@ -57,7 +57,7 @@ export default function HomePage() {
       .then((data) => {
         console.log("data" + data);
         const mappedData = data.map((item) => {
-          return {id: item.id, name : item.task, finished: item.finished};
+          return {id: item.id, name : item.name, finished: item.finished};
         })
         setTasks(mappedData);
       });
@@ -84,12 +84,11 @@ export default function HomePage() {
           "finished": false
         }),
       })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        setTasks([...tasks, { name: taskName, finished: false, id: data.id }]); 
+      .then(response => response.json())
+      .then(data => {
+        setTasks([...tasks, data]); 
+        setTaskName("");
       });
-      setTaskName("");
     } else if (tasks.some((task) => task.name === taskName)) {
       alert("Task already exists!");
     }

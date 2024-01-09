@@ -95,11 +95,12 @@ app.post("/tasks", async (req, res) => {
     const finished = req.body.finished;
     const data = {
       'userID': userID,
-      'task': userTask,
+      'name': userTask,
       'finished': finished
     } 
     // Adding a new document to the "tasks" collection
-    const task = await db.collection("tasks").add(data);
+    const addedTask = await db.collection("tasks").add(data);
+    console.log(addedTask.id);
 
     res.status(201).send({
       id: addedTask.id,  // Automatically generated Document ID from Firestore
